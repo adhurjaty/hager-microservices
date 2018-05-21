@@ -1,5 +1,5 @@
 build:
-	protoc -I. --go_out=plugins=micro:$(GOPATH)/src/hager-microservices/user-service \
+	protoc -I. --go_out=plugins=micro:$(GOPATH)/src/github.com/adhurjaty/hager-microservices/user-service \
 		proto/user/user.proto
 	docker build -t user-service .
 
