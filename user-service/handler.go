@@ -33,8 +33,8 @@ func (srv *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Respons
 }
 
 func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	log.Println("Logging in with:", req.Email, req.Password)
-	user, err := srv.repo.GetByEmail(req.Email)
+	log.Println("Logging in with:", req.Username, req.Password)
+	user, err := srv.repo.GetByUsername(req.Username)
 	log.Println(user)
 	if err != nil {
 		return err

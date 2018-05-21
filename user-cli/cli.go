@@ -53,7 +53,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("Could not authenticate user: %s error: %v\n", email, err)
+		log.Fatalf("Could not authenticate user: %s error: %v\n", username, err)
 	}
 
 	log.Printf("Your access token is: %s \n", authResponse.Token)
