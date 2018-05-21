@@ -5,9 +5,9 @@ FROM golang:1.9.0 as builder
 WORKDIR /go/src/hager-microservices/user-service
 
 COPY . .
-# RUN go get -u github.com/golang/dep/cmd/dep
-# RUN dep init && dep ensure
-RUN go get && CGO_ENABLED=0 GOOS=linux go build -o user-service -a -installsuffix cgo .
+
+RUN go get
+RUN CGO_ENABLED=0 GOOS=linux go build -o user-service -a -installsuffix cgo .
 
 FROM alpine:latest
 

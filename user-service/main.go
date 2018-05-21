@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
 	"github.com/micro/go-micro"
-	pb "hager-microservices/user-service/proto/user"
 	"log"
 )
 

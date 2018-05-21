@@ -4,9 +4,9 @@ import (
 	"errors"
 	"log"
 
+	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
-	pb "hager-microservices/user-service/proto/user"
 )
 
 type service struct {

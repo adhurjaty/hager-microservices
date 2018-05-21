@@ -1,8 +1,8 @@
 package main
 
 import (
+	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
 	"github.com/jinzhu/gorm"
-	pb "hager-microservices/user-service/proto/user"
 )
 
 type Repository interface {

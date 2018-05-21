@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
+	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
 	microclient "github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"golang.org/x/net/context"
-	pb "hager-microservices/user-service/proto/user"
 )
 
 func main() {

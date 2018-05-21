@@ -5,9 +5,7 @@ WORKDIR /go/src/hager-microservices/user-cli
 
 COPY . .
 
-RUN go get github.com/micro/go-micro/client
-RUN go get github.com/micro/go-micro/cmd
-RUN go get golang.org/x/net/context
+RUN go get
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
 FROM alpine:latest
