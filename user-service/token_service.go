@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
 	"github.com/dgrijalva/jwt-go"
+	"log"
+	"time"
 )
 
 var (
@@ -29,16 +32,22 @@ type TokenService struct {
 func (srv *TokenService) Decode(token string) (*CustomClaims, error) {
 
 	// Parse the token
-	tokenType, err := jwt.ParseWithClaims(string(key), &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	tokenType, err := jwt.ParseWithClaims(string(token), &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return key, nil
 	})
 
-	// Validate the token and return the custom claims
-	if claims, ok := tokenType.Claims.(*CustomClaims); ok && tokenType.Valid {
-		return claims, nil
-	} else {
+	if err != nil {
+		log.Println("Error:", err)
 		return nil, err
 	}
+
+	// Validate the token and return the custom claims
+	claims, ok := tokenType.Claims.(*CustomClaims)
+	if !ok || !tokenType.Valid {
+		return nil, errors.New("Could not parse the claims or invalid token")
+	}
+
+	return claims, nil
 }
 
 // Encode a claim into a JWT
@@ -47,7 +56,7 @@ func (srv *TokenService) Encode(user *pb.User) (string, error) {
 	claims := CustomClaims{
 		user,
 		jwt.StandardClaims{
-			ExpiresAt: 15000,
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // expires tomorrow
 			Issuer:    "go.micro.srv.user",
 		},
 	}

@@ -1,10 +1,10 @@
 version: '3.1'
 
 services:
-  user-cli:
-    build: ./user-cli
-    environment:
-      MICRO_REGISTRY: "mdns"
+  # user-cli:
+  #   build: ./user-cli
+  #   environment:
+  #     MICRO_REGISTRY: "mdns"
 
   user-service:
     build: ./user-service
@@ -20,10 +20,21 @@ services:
       DB_PASSWORD: "postgres"
     depends_on:
       - database
+      - micro
 
   database:
     image: postgres
     ports:
       - 5432:5432
+
+  micro:
+    image: microhq/micro:latest
+    command: "api --address=:8080 --handler=rpc --namespace=hager"
+    environment:
+      MICRO_REGISTRY: "mdns"
+    ports:
+      - 8080:8080
+    
+
 
 
