@@ -21,6 +21,19 @@ services:
     depends_on:
       - database
       - micro
+      - messenger
+
+  email-service:
+    command: --net="host"
+    build: ./email-service
+    ports:
+      - 50052
+    environment:
+      MICRO_SERVER_ADDRESS: ":50052"
+      MICRO_REGISTRY: "mdns"
+    depends_on:
+      - messenger
+      - user-service
 
   database:
     image: postgres
@@ -34,6 +47,12 @@ services:
       MICRO_REGISTRY: "mdns"
     ports:
       - 8080:8080
+
+  messenger:
+    image: nats
+    ports:
+      - 4222:4222
+
     
 
 

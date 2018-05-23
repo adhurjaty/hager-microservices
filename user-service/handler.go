@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"github.com/micro/go-micro/broker"
 	"log"
 
 	pb "github.com/adhurjaty/hager-microservices/user-service/proto/user"
@@ -9,9 +11,12 @@ import (
 	"golang.org/x/net/context"
 )
 
+const topic = "user.created"
+
 type service struct {
 	repo         Repository
 	tokenService Authable
+	PubSub       broker.Broker
 }
 
 func (srv *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
@@ -65,6 +70,32 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 		return err
 	}
 	res.User = req
+
+	err = srv.publishEvent(req)
+
+	return err
+}
+
+func (srv *service) publishEvent(user *pb.User) error {
+	// Marshal to JSON string
+	body, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
+	// Create a broker message
+	msg := &broker.Message{
+		Header: map[string]string{
+			"id": user.Id,
+		},
+		Body: body,
+	}
+
+	// Publish message to broker
+	if err := srv.PubSub.Publish(topic, msg); err != nil {
+		log.Printf("[pub] failed: %v", err)
+	}
+
 	return nil
 }
 
@@ -82,6 +113,12 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 		return errors.New("invalid user")
 	}
 
+	user := &pb.User{
+		Username:  claims.User.Username,
+		AuthLevel: claims.User.AuthLevel,
+	}
+
+	res.User = user
 	res.Valid = true
 
 	return nil
